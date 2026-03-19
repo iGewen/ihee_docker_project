@@ -1,0 +1,47 @@
+name: 同步常用镜像到阿里云 ACR
+
+on:
+  workflow_dispatch:
+  # schedule:
+  #   - cron: '0 2 * * *'
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 登录到阿里云 ACR
+        run: |
+          echo "${{ secrets.ACR_PASSWORD }}" | docker login \
+            --username "${{ secrets.ACR_USERNAME }}" \
+            --password-stdin "${{ secrets.ACR_REGISTRY }}"
+
+      - name: 同步镜像
+        env:
+          ACR_REGISTRY: crpi-h8wdp3y1iogi9wj4.cn-qingdao.personal.cr.aliyuncs.com
+          # ⚠️ 请将下面的 "my-project" 替换为你自己的 ACR 命名空间名称
+          ACR_NAMESPACE: ihee_docker_project
+        run: |
+          # 镜像列表（全部使用稳定版/LTS标签）
+          IMAGES=(
+            "mysql:8.0"                     # MySQL 8.0 稳定版
+            "nginx:latest"                   # Nginx 最新稳定版
+            "redis:latest"                    # Redis 最新稳定版
+            "node:lts"                        # Node.js 最新 LTS 版
+            "python:3-slim"                    # Python 3 最新稳定版 (slim 瘦身版)
+            "openjdk:17-jdk-slim"              # OpenJDK 17 LTS (slim 瘦身版)
+            "mongo:6"                          # MongoDB 6.x 最新稳定版
+            "postgres:15"                       # PostgreSQL 15 稳定版
+            "rabbitmq:3-management"             # RabbitMQ 3.x 稳定版（带管理插件）
+            "elasticsearch:8"                   # Elasticsearch 8.x 最新稳定版
+          )
+
+          for img in "${IMAGES[@]}"; do
+            echo "正在处理镜像: $img"
+            docker pull "$img"
+            safe_name=$(echo "$img" | tr '/' '_')
+            acr_image="${ACR_REGISTRY}/${ACR_NAMESPACE}/${safe_name}"
+            docker tag "$img" "$acr_image"
+            docker push "$acr_image"
+            echo "✅ 镜像推送完成: $acr_image"
+            echo "------------------------------------"
+          done
