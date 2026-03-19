@@ -2,6 +2,8 @@ name: 同步常用镜像到阿里云 ACR
 
 on:
   workflow_dispatch:  # 手动触发
+  schedule:
+  - cron: '0 20 * * *'   # 每天 UTC 时间 20:00 运行 = 北京时间次日凌晨 4:00
 
 # 全局环境变量，定义 ACR 地址和命名空间
 env:
