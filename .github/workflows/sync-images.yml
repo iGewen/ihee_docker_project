@@ -1,9 +1,12 @@
 name: 同步常用镜像到阿里云 ACR
 
 on:
-  workflow_dispatch:
-  # schedule:
-  #   - cron: '0 2 * * *'
+  workflow_dispatch:  # 手动触发
+
+# 全局环境变量，定义 ACR 地址和命名空间
+env:
+  ACR_REGISTRY: crpi-h8wdp3y1iogi9wj4.cn-qingdao.personal.cr.aliyuncs.com   # 你的 ACR 公网地址
+  ACR_NAMESPACE: ihee_docker_project                                        # 你的命名空间
 
 jobs:
   sync:
@@ -13,26 +16,22 @@ jobs:
         run: |
           echo "${{ secrets.ACR_PASSWORD }}" | docker login \
             --username "${{ secrets.ACR_USERNAME }}" \
-            --password-stdin "${{ secrets.ACR_REGISTRY }}"
+            --password-stdin ${{ env.ACR_REGISTRY }}      # 这里用了环境变量，而不是 secrets
 
       - name: 同步镜像
-        env:
-          ACR_REGISTRY: crpi-h8wdp3y1iogi9wj4.cn-qingdao.personal.cr.aliyuncs.com
-          # ⚠️ 请将下面的 "my-project" 替换为你自己的 ACR 命名空间名称
-          ACR_NAMESPACE: ihee_docker_project
         run: |
           # 镜像列表（全部使用稳定版/LTS标签）
           IMAGES=(
-            "mysql:8.0"                     # MySQL 8.0 稳定版
-            "nginx:latest"                   # Nginx 最新稳定版
-            "redis:latest"                    # Redis 最新稳定版
-            "node:lts"                        # Node.js 最新 LTS 版
-            "python:3-slim"                    # Python 3 最新稳定版 (slim 瘦身版)
-            "openjdk:17-jdk-slim"              # OpenJDK 17 LTS (slim 瘦身版)
-            "mongo:6"                          # MongoDB 6.x 最新稳定版
-            "postgres:15"                       # PostgreSQL 15 稳定版
-            "rabbitmq:3-management"             # RabbitMQ 3.x 稳定版（带管理插件）
-            "elasticsearch:8"                   # Elasticsearch 8.x 最新稳定版
+            "mysql:8.0"
+            "nginx:latest"
+            "redis:latest"
+            "node:lts"
+            "python:3-slim"
+            "openjdk:17-jdk-slim"
+            "mongo:6"
+            "postgres:15"
+            "rabbitmq:3-management"
+            "elasticsearch:8"
           )
 
           for img in "${IMAGES[@]}"; do
