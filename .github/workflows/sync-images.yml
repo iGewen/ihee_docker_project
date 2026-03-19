@@ -27,7 +27,6 @@ jobs:
             "redis:latest"
             "node:lts"
             "python:3-slim"
-            "openjdk:17-slim"
             "mongo:6"
             "postgres:15"
             "rabbitmq:3-management"
