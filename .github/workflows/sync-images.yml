@@ -30,7 +30,6 @@ jobs:
             "mongo:6"
             "postgres:15"
             "rabbitmq:3-management"
-            "elasticsearch:8"
           )
 
           for img in "${IMAGES[@]}"; do
