@@ -33,6 +33,7 @@ jobs:
             "postgres:15"
             "rabbitmq:3-management"
             "node:18-alpine"
+            "redis:7-alpine"
             "1panel/openclaw:2026.3.24"
             "1panel/openclaw:2026.3.2"
             
