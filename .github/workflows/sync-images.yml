@@ -28,6 +28,7 @@ jobs:
             "nginx:latest"
             "redis:latest"
             "redis:7-alpine"
+            "redis:7.2-alpine"
             "node:lts"
             "python:3-slim"
             "mongo:6"
