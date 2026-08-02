@@ -36,8 +36,8 @@ jobs:
             "rabbitmq:3-management"
             "node:18-alpine"
             "nginx:alpine"
-            "1panel/openclaw:2026.3.24"
-            "1panel/openclaw:2026.3.2"
+            "node:20-alpine"
+
             
           )
 
