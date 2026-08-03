@@ -38,7 +38,7 @@ jobs:
             "nginx:alpine"
             "node:20-alpine"
             "jwilder/nginx-proxy:alpine"
-            "nginxproxy/acme-companion:2.2"
+            "nginxproxy/acme-companion:2.8"
 
             
           )
